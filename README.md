@@ -1,45 +1,55 @@
-\# Enterprise Web Application Firewall (WAF) Deployment \& Threat Mitigation
+# 🛡️ Enterprise Web Application Firewall (WAF)
 
-\## Overview
+A hands-on cybersecurity project demonstrating the deployment and testing of **ModSecurity WAF** with **OWASP Core Rule Set (CRS)** on an **Nginx web server** running on Ubuntu Server.
 
-This project demonstrates the setup, hardening, and threat detection capabilities of an open-source \*\*ModSecurity WAF\*\* integrated with the \*\*OWASP Core Rule Set (CRS)\*\* on an \*\*Nginx\*\* web server hosted on Ubuntu Server.
+## 🏗️ Architecture
 
-The WAF was validated against common OWASP Top 10 web attack vectors initiated from \*\*Kali Linux\*\*.
+```text
+Kali Linux (10.0.2.4)
+        │
+        │ Crafted HTTP Requests
+        ▼
+Ubuntu Server (10.0.2.15)
+        │
+      Nginx
+        │
+  ModSecurity WAF
+        │
+    OWASP CRS
+        │
+   ┌────┴────┐
+   ▼         ▼
+ ALLOW      BLOCK
+  200        403
+```
 
-\## Network \& Infrastructure Architecture
+## 🧪 Attack Testing
 
-\* \*\*Target Server:\*\* Ubuntu Server (`10.0.2.15`) running Nginx \& ModSecurity.
+| Attack            | Payload                     | Result   | CRS Rule |
+| ----------------- | --------------------------- | -------- | -------- |
+| ✅ Legitimate      | `?query=tea`                | `200 OK` | —        |
+| 🔴 SQL Injection  | `' OR '1'='1`               | `403`    | `942100` |
+| 🔴 XSS            | `<script>alert(1)</script>` | `403`    | `941110` |
+| 🔴 Path Traversal | `../../../../etc/passwd`    | `403`    | `930110` |
 
-\* \*\*Attacker System:\*\* Kali Linux (`10.0.2.4`) issuing crafted HTTP payloads.
+## ⚙️ Implementation
 
-\* \*\*Firewall Engine:\*\* ModSecurity v3 / OWASP CRS in Active Enforcement (`SecRuleEngine On`).
+* Enabled ModSecurity active enforcement: `SecRuleEngine On`
+* Integrated **OWASP Core Rule Set (CRS)**
+* Used **Kali Linux + curl** for attack simulation
+* Analyzed ModSecurity audit logs
+* Configured **Nginx** as the web server
 
-\## Test Results \& Attack Verification
+## 🔐 Security Concepts
 
-| Vulnerability / Attack Type | Payload Executed | WAF Action | HTTP Response | OWASP Rule ID |
+* Web Application Firewall (WAF)
+* SQL Injection & XSS detection
+* Path Traversal protection
+* HTTP request inspection
+* OWASP CRS rule detection
+* Security log analysis
+* WAF rule tuning and false-positive handling
 
-| :--- | :--- | :--- | :--- | :--- |
+## 🛠️ Technologies
 
-| \*\*Legitimate Traffic\*\* | `/index.html?query=tea` | Allowed | `200 OK` | N/A |
-
-| \*\*SQL Injection (SQLi)\*\* | `?query=' OR '1'='1` | Blocked | `403 Forbidden` | `942100` |
-
-| \*\*Cross-Site Scripting (XSS)\*\* | `?query=<script>alert(1)</script>` | Blocked | `403 Forbidden` | `941110` |
-
-| \*\*Path Traversal\*\* | `?page=../../../../etc/passwd` | Blocked | `403 Forbidden` | `930110` |
-
-\## Technical Implementation Steps
-
-1\. \*\*Engine Enforcement:\*\* Transitioned ModSecurity from `DetectionOnly` to `SecRuleEngine On` mode in `/etc/modsecurity/modsecurity.conf`.
-
-2\. \*\*Rule Integration:\*\* Installed and configured the \*\*OWASP Core Rule Set (CRS)\*\* (`crs-setup.conf`).
-
-3\. \*\*Attacker Simulation:\*\* Used `curl` CLI on Kali Linux to generate malformed HTTP requests containing payload strings.
-
-4\. \*\*Log Security Analysis:\*\* Inspected and extracted event signatures from `/var/log/apache2/modsec\_audit.log`.
-
-\## Security Takeaways
-
-\* \*\*Pre-Execution Filtering:\*\* ModSecurity inspects HTTP headers, GET parameters, and POST request bodies before they reach application logic, neutralizing SQL and script injection threats.
-
-\* \*\*Rule Tuning Balance:\*\* Enterprise deployments require adjusting rule thresholds to block malicious payloads while whitelisting legitimate user activity to eliminate false positives.
+`Ubuntu Server` · `Kali Linux` · `Nginx` · `ModSecurity v3` · `OWASP CRS` · `curl`
