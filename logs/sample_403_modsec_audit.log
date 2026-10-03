@@ -1,0 +1,20 @@
+--179103479238.489207--A--
+[03/Oct/2026:12:58:50 +0000] 179103479238.489207 192.168.56.108 54321 192.168.56.108 80
+--179103479238.489207--B--
+GET /index.html?query=%27%20OR%20%271%27=%271 HTTP/1.1
+Host: 192.168.56.108
+User-Agent: curl/7.88.1
+Accept: */*
+
+--179103479238.489207--F--
+HTTP/1.1 403 Forbidden
+Server: nginx
+Content-Type: text/html
+Content-Length: 162
+
+--179103479238.489207--H--
+ModSecurity: Warning. Matched "Operator `Rx' with parameter `(?:\b[d.]+|\b[da-f:]+)' against variable `ARGS:query'" [file "/etc/modsecurity/crs/rules/REQUEST-920-PROTOCOL-ENFORCEMENT.conf"] [line "756"] [id "920350"] [msg "OWASP_CRS/PROTOCOL_ENFORCEMENT"] [severity "CRITICAL"]
+ModSecurity: Warning. Detected SQLi using libinjection. [file "/etc/modsecurity/crs/rules/REQUEST-942-APPLICATION-ATTACK-SQLI.conf"] [line "45"] [id "942100"] [msg "SQL Injection Attack Detected via libinjection"] [data "Matched Data: s&sos found within ARGS:query: ' OR '1'='1"] [severity "CRITICAL"] [tag "OWASP_CRS"] [tag "OWASP_CRS/ATTACK-SQLI"]
+ModSecurity: Access denied with code 403 (phase 2). Matched "Operator `Ge' with parameter `5' against variable `TX:BLOCKING_INBOUND_ANOMALY_SCORE'" [file "/etc/modsecurity/crs/rules/REQUEST-949-BLOCKING-EVALUATION.conf"] [line "222"] [id "949110"] [msg "Inbound Anomaly Score Exceeded"]
+
+--179103479238.489207--Z--
